@@ -7,7 +7,7 @@ resource "aws_iam_role_policy" "cluster_policy" {
     Statement = [
       {
         Action = [
-          "ec2:Describe*",
+          "ec2:Describe*", 
         ]
         Effect   = "Allow"
         Resource = "*"
