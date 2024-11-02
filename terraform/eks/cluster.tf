@@ -1,11 +1,11 @@
 resource "aws_eks_cluster" "techchalenge_cluster" {
-  name     = "techchalenge_cluster"
+  name     = "techchalenge-eks-cluster"
   role_arn = aws_iam_role.cluster_role.id
 
   vpc_config {
     subnet_ids = [
-      aws_subnet.private_cluster_subnet.id,
-      aws_subnet.public_cluster_subnet.id
+      aws_subnet.private_subnet.id,
+      aws_subnet.public_subnet.id
     ]
   }
 
