@@ -22,3 +22,9 @@ output "private_route_table_id" {
   description = "ID da tabela de rotas privada"
   value       = aws_route_table.private_cluster_route_table.id
 }
+
+output "aws_security_group_id" {
+  description = "ID do Security Group"
+  value       = aws_security_group.allow_tls.id
+
+}

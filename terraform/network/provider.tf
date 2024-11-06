@@ -5,6 +5,10 @@ terraform {
       version = "~> 4.0"
     }
   }
+
+  backend "local" {
+    path = "/home/darlei/Documents/tfstate/network/terraform.tfstate"
+  }
 }
 
 provider "aws" {
