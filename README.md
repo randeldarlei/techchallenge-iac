@@ -27,12 +27,11 @@ terraform/ ├── eks/ │ ├── cluster.tf │ ├── data.tf │ ├
 
 Acesse e execute os seguintes comandos na pasta `network:`
 
-´´´
-
+```bash
 terraform init
 terraform apply
 
-´´´
+```
 
 Isso irá inicializar todo o backend do Terraform e criar a VPC, subnets privadas e públicas, tabelas de rotas e um security group que serão utilizado tanto para o RDS como para o EKS.
 
@@ -42,17 +41,17 @@ Agora as informações relacionadas á VPC e Security Group foram criadas com su
 
 Acesse e execute os seguintes comandos na pasta `eks:`
 
-´´´
+```bash
 terraform init
 terraform apply
 
-´´´
+```
+
 Isso criará o cluster EKS, associando-o às subnets privadas definidas.
 
 Acesse e execute os seguintes comandos na pasta `rds:`
 
-```
-
+```bash
 terraform init
 terraform apply
 
