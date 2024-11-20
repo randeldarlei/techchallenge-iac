@@ -5,8 +5,7 @@ Este repositório contém uma estrutura de arquivos `hcl` para o provisionamento
 
 ## 📦 Estrutura ##
 
-terraform/ ├── eks/ │ ├── cluster.tf │ ├── data.tf │ ├── ian.tf │ └── provider.tf ├── network/ │ ├── output.tf │ ├── provider.tf │ ├── sg.tf │ └── vpc.tf ├── rds/ │ ├── data.tf │ ├── provider.tf │ └── rds.tf 
-
+- *cognito:* Criação do Cognito e User Pool.
 - *eks:* Provisionamento do cluster EKS.
 - *network:* Criação da VPC, subnets, tabelas de rotas e security groups.
 - *rds:* Configuração do banco de dados RDS.
@@ -18,8 +17,8 @@ terraform/ ├── eks/ │ ├── cluster.tf │ ├── data.tf │ ├
 
 ### Configuração Inicial
 
-- *Configurar o AWS CLI:* Execute ´aws configure´ e configure o perfil de autenticação com as credenciais apropriadas para provisionar a infraestrutura na região ´us-east-1´.
-- *Configurar o backend do Terraform:* Cada pasta (´eks´, ´network´, ´rds´) possui um backend local para armazenamento dos arquivos de estado (´tfstate´). Ajuste os caminhos conforme necessário para seu ambiente.
+- *Configurar o AWS CLI:* Execute ´aws configure´ e configure o perfil de autenticação com as credenciais apropriadas para provisionar a infraestrutura na região ´us-east-1´ juntamente com uma *access_key* e uma *secret_key*.
+- *Configurar o backend do Terraform:* Cada pasta (´eks´, ´network´, ´rds´, ´cognito´) possui um backend local para armazenamento dos arquivos de estado (´tfstate´). Ajuste os caminhos conforme necessário para seu ambiente.
 
 ## Como Provisionar Recursos ##
 
@@ -50,6 +49,14 @@ terraform apply
 Isso criará o cluster EKS, associando-o às subnets privadas definidas.
 
 Acesse e execute os seguintes comandos na pasta `rds:`
+
+```bash
+terraform init
+terraform apply
+
+```
+
+Acesse e execute os seguintes comandos na pasta `cognito:`
 
 ```bash
 terraform init

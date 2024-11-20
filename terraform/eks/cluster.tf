@@ -3,7 +3,7 @@ resource "aws_eks_cluster" "techchalenge_cluster" {
   role_arn = aws_iam_role.cluster_role.arn
 
   vpc_config {
-  subnet_ids = data.terraform_remote_state.networking.outputs.private_subnet_ids
+  subnet_ids = data.terraform_remote_state.network.outputs.private_subnet_ids
 }
 
   depends_on = [

@@ -2,7 +2,7 @@
 **/aws/**
 
 # Diretórios locais do .terraform
-**/.terraform/*
+*.terraform*
 
 # Arquivos .tfstate
 *.tfstate
@@ -28,4 +28,4 @@ override.tf.json
 # Ignorar arquivos de configuração CLI
 .terraformrc
 terraform.rc
-.terraform.lock.hcl
+*.terraform.lock.hcl*

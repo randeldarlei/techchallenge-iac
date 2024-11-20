@@ -6,8 +6,8 @@ terraform {
     }
   }
 
-  backend "local" {
-    path = "/home/darlei/Documents/tfstate/network/terraform.tfstate"
+    backend "local" {
+    path = "/home/darlei/Documents/tfstate/cognito/terraform.tfstate"
   }
 }
 

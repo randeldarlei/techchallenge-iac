@@ -1,10 +1,21 @@
 resource "aws_rds_cluster" "postgresql" {
-  count                     = 1
-  cluster_identifier        = "techchalenge-rds-cluster"
-  engine                    = "mysql"
-  db_cluster_instance_class = "db.t3.micro"
-  database_name             = "techchalenge-rds-database"
+  cluster_identifier        = "techchalenge"
+  deletion_protection       = false
+  engine                    = "aurora-postgresql"
+  database_name             = "techchalenge"
   master_username           = "master"
-  master_password           = "0dG3y77£"
-  vpc_security_group_ids    = data.terraform_remote_state.networking.outputs.aws_security_group.allow_tls.id
+  master_password           = "0dG3y771"
+  vpc_security_group_ids    = [data.terraform_remote_state.network.outputs.aws_security_group_id]
+  skip_final_snapshot       = true
+
+  db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
+}
+
+resource "aws_db_subnet_group" "rds_subnet_group" {
+  name       = "rds-subnet-group"
+  subnet_ids = data.terraform_remote_state.network.outputs.private_subnet_ids
+
+  tags = {
+    Name = "rds-subnet-group"
+  }
 }
