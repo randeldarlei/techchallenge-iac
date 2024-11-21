@@ -1,4 +1,4 @@
-name: Terraform Deploy
+name: Terraform Apply
 
 on:
   workflow_dispatch:
@@ -25,7 +25,8 @@ jobs:
         env:
           HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
         run: |
-          echo $HASHICORP_TOKEN > ~/.terraform.d/credentials.tfrc.json
+          mkdir -p ~/.terraform.d
+          echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
           echo "Autenticado no Terraform Cloud."
 
       - name: Setup Terraform
