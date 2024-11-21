@@ -1,5 +1,6 @@
 resource "aws_rds_cluster" "postgresql" {
   cluster_identifier        = "techchalenge"
+  db_cluster_instance_class = "t3.micro"
   deletion_protection       = false
   engine                    = "aurora-postgresql"
   database_name             = "techchalenge"

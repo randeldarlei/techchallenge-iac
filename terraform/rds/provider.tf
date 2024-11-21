@@ -6,9 +6,20 @@ terraform {
     }
   }
 
-      backend "local" {
-    path = "/home/darlei/Documents/tfstate/rds/terraform.tfstate"
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "ACG-Terraform-Labs-Teste"
+
+    workspaces {
+      name = "lab-migrate-state"
+    }
   }
+
+#       backend "local" {
+#     path = "/home/darlei/Documents/tfstate/rds/terraform.tfstate"
+#   }
+# }
+
 }
 
 provider "aws" {
