@@ -1,0 +1,40 @@
+name: Terraform Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      module:
+        description: "Escolha o módulo para aplicar o Terraform"
+        required: true
+        type: choice
+        options:
+          - cognito
+          - eks
+          - rds
+          - network
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Terraform Login
+        env:
+          HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
+        run: |
+          echo $HASHICORP_TOKEN > ~/.terraform.d/credentials.tfrc.json
+          echo "Autenticado no Terraform Cloud."
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
+
+      - name: Terraform Init and Apply
+        working-directory: terraform/${{ github.event.inputs.module }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
