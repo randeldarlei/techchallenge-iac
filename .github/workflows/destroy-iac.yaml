@@ -45,7 +45,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Terraform Init and Apply
+      - name: Terraform Init and Destroy
         working-directory: terraform/${{ github.event.inputs.module }}
         run: |
           terraform init
