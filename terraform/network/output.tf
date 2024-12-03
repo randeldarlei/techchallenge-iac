@@ -10,7 +10,11 @@ output "public_subnet_ids" {
 
 output "private_subnet_ids" {
   description = "IDs das subnets privadas"
-  value       = [aws_subnet.private_cluster_subnet_1.id, aws_subnet.private_cluster_subnet_2.id]
+  value       = [
+    aws_subnet.private_cluster_subnet_1.id,
+    aws_subnet.private_cluster_subnet_2.id,
+    aws_subnet.private_cluster_subnet_3.id
+  ]
 }
 
 output "public_route_table_id" {
@@ -26,5 +30,9 @@ output "private_route_table_id" {
 output "aws_security_group_id" {
   description = "ID do Security Group"
   value       = aws_security_group.allow_tls.id
+}
 
+output "aws_internet_gateway_id" {
+  description = "ID do Internet Gateway"
+  value       = aws_internet_gateway.gw.id
 }

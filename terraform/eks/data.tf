@@ -1,6 +1,11 @@
 data "terraform_remote_state" "network" {
-  backend = "local"
+  backend = "remote"
+
   config = {
-    path = "/home/darlei/Documents/tfstate/network/terraform.tfstate"
+    hostname     = "app.terraform.io"
+    organization = "ACG-Terraform-Labs-Teste"
+    workspaces = {
+      name = "lab-migrate-state"
+    }
   }
 }
