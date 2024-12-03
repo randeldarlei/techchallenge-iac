@@ -1,9 +1,16 @@
-name: Kubernetes Deploy
+name: Terraform Apply
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      module:
+        description: "Escolha o módulo para aplicar o Terraform"
+        required: true
+        type: choice
+        options:
+          - cognito
+          - eks
+          - network
 
 jobs:
   deploy:
@@ -13,6 +20,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Terraform Login
+        env:
+          HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
+        run: |
+          mkdir -p ~/.terraform.d
+          echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
+          echo "Autenticado no Terraform Cloud."
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -20,21 +40,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Setup Kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'v1.27.3'
-
-      - name: Configure Kubeconfig
+      - name: Terraform Init and Apply
+        working-directory: terraform/${{ github.event.inputs.module }}
         run: |
-          aws eks update-kubeconfig \
-            --name techchalenge-eks-cluster \
-            --region us-east-1
-
-      - name: Apply Kubernetes Manifests
-        run: |
-          kubectl apply -f kubernetes/
-
-      - name: Check Pods Status
-        run: |
-          kubectl get pods -o wide
+          terraform init
+          terraform destroy -auto-approve
