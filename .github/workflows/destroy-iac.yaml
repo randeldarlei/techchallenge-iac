@@ -1,42 +1,40 @@
-name: Terraform Destroy
+name: Kubernetes Deploy
 
 on:
-  workflow_dispatch:
-    inputs:
-      module:
-        description: "Escolha o módulo para destruir o Terraform"
-        required: true
-        type: choice
-        options:
-          - cognito
-          - eks
-          - rds
-          - network
+  push:
+    branches:
+      - main
 
 jobs:
-  destroy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Terraform Login
-        env:
-          HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
-        run: |
-          mkdir -p ~/.terraform.d
-          echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
-          echo "Autenticado no Terraform Cloud."
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          terraform_version: 1.5.6
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-      - name: Terraform Init and Destroy
-        working-directory: terraform/${{ github.event.inputs.module }}
+      - name: Setup Kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.27.3'
+
+      - name: Configure Kubeconfig
         run: |
-          terraform init
-          terraform destroy -auto-approve
+          aws eks update-kubeconfig \
+            --name techchalenge-eks-cluster \
+            --region us-east-1
 
+      - name: Apply Kubernetes Manifests
+        run: |
+          kubectl apply -f kubernetes/
+
+      - name: Check Pods Status
+        run: |
+          kubectl get pods -o wide
