@@ -58,8 +58,7 @@ jobs:
         run: |
           terraform init \
             -backend-config="hostname=app.terraform.io" \
-            -backend-config="organization=ACG-Terraform-Labs-Teste" \
-            -backend-config="workspaces=lab-migrate-state"
+            -backend-config="organization=ACG-Terraform-Labs-Teste"
           if [ "${{ github.event.inputs.action }}" == "apply" ]; then
             terraform apply -auto-approve
           else
