@@ -1,4 +1,4 @@
-name: Terraform Apply
+name: Terraform Apply/Destroy
 
 on:
   workflow_dispatch:
@@ -11,9 +11,16 @@ on:
           - cognito
           - eks
           - network
+      action:
+        description: "Escolha a ação (apply ou destroy)"
+        required: true
+        type: choice
+        options:
+          - apply
+          - destroy
 
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +33,6 @@ jobs:
         run: |
           mkdir -p ~/.terraform.d
           echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
-          echo "Autenticado no Terraform Cloud."
 
       - name: Export Terraform Variables
         run: |
@@ -45,8 +51,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Terraform Init and Apply
+      - name: Terraform Init and Apply/Destroy
         working-directory: terraform/${{ github.event.inputs.module }}
         run: |
           terraform init
-          terraform apply -auto-approve
+          if [ "${{ github.event.inputs.action }}" == "apply" ]; then
+            terraform apply -auto-approve
+          else
+            terraform destroy -auto-approve
+          fi
