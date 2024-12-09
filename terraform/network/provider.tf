@@ -6,7 +6,6 @@ terraform {
     }
   }
 
-terraform {
   backend "remote" {
     hostname     = "app.terraform.io"
     organization = "ACG-Terraform-Labs-Teste"
@@ -15,4 +14,8 @@ terraform {
       name = "lab-migrate-state"
     }
   }
+}
+
+provider "aws" {
+  region = "us-east-1"
 }
