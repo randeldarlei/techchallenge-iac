@@ -34,11 +34,6 @@ jobs:
           mkdir -p ~/.terraform.d
           echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
 
-      - name: Debug AWS Variables
-        run: |
-          echo "TF_VAR_AWS_ACCESS_KEY_ID=${TF_VAR_AWS_ACCESS_KEY_ID}"
-          echo "TF_VAR_AWS_SECRET_ACCESS_KEY=${TF_VAR_AWS_SECRET_ACCESS_KEY}"
-
       - name: Export Terraform Variables
         run: |
           echo "TF_VAR_AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
@@ -50,6 +45,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+
+      - name: Debug AWS Variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          echo "TF_VAR_AWS_ACCESS_KEY_ID=${TF_VAR_AWS_ACCESS_KEY_ID}"
+          echo "TF_VAR_AWS_SECRET_ACCESS_KEY=${TF_VAR_AWS_SECRET_ACCESS_KEY}"
 
       - name: Clean Terraform Cache
         run: |
