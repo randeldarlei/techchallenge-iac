@@ -53,10 +53,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "us-east-1"
         run: |
-          terraform init \
-            -backend-config="hostname=app.terraform.io" \
-            -backend-config="organization=ACG-Terraform-Labs-Teste" \
-            -backend-config="workspaces.prefix=lab-migrate-state"
+          terraform init
           if [ "${{ github.event.inputs.action }}" == "apply" ]; then
             terraform apply -auto-approve
           else
