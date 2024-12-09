@@ -57,11 +57,9 @@ jobs:
           TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           terraform init \
-            -backend-config="bucket=my-terraform-backend" \
-            -backend-config="key=${{ github.event.inputs.module }}/terraform.tfstate" \
-            -backend-config="region=us-east-1" \
-            -backend-config="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-            -backend-config="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+            -backend-config="hostname=app.terraform.io" \
+            -backend-config="organization=ACG-Terraform-Labs-Teste" \
+            -backend-config="workspaces=lab-migrate-state"
           if [ "${{ github.event.inputs.action }}" == "apply" ]; then
             terraform apply -auto-approve
           else
