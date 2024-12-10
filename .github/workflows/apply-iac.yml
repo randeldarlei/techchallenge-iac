@@ -34,21 +34,19 @@ jobs:
           mkdir -p ~/.terraform.d
           echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+      - name: Create Variables File
+        working-directory: terraform/${{ github.event.inputs.module }}
+        run: |
+          echo "aws_access_key = \"${{ secrets.AWS_ACCESS_KEY_ID }}\"" > variables.tfvars
+          echo "aws_secret_key = \"${{ secrets.AWS_SECRET_ACCESS_KEY }}\"" >> variables.tfvars
 
       - name: Terraform Init and Apply/Destroy
         working-directory: terraform/${{ github.event.inputs.module }}
         run: |
-          terraform init \
-            -backend-config="hostname=app.terraform.io" \
-            -backend-config="organization=ACG-Terraform-Labs-Teste"
+          terraform init
           if [ "${{ github.event.inputs.action }}" == "apply" ]; then
-            terraform apply -auto-approve
+            terraform apply -var-file="variables.tfvars" -auto-approve
           else
-            terraform destroy -auto-approve
+            terraform destroy -var-file="variables.tfvars" -auto-approve
           fi
+
