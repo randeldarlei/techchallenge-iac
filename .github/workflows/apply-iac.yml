@@ -18,6 +18,14 @@ on:
         options:
           - apply
           - destroy
+      aws_access_key:
+        description: "AWS Access Key"
+        required: true
+        type: string
+      aws_secret_key:
+        description: "AWS Secret Key"
+        required: true
+        type: string
 
 jobs:
   terraform:
@@ -27,40 +35,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Terraform Login
-        env:
-          HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
-        run: |
-          mkdir -p ~/.terraform.d
-          echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Debug AWS Variables
-        run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          echo "AWS_REGION=us-east-1"
-
       - name: Terraform Init and Apply/Destroy
         working-directory: terraform/${{ github.event.inputs.module }}
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ github.event.inputs.aws_access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ github.event.inputs.aws_secret_key }}
           AWS_REGION: us-east-1
         run: |
-          terraform init \
-            -backend-config="access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
-            -backend-config="secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-            -backend-config="region=us-east-1"
-            -backend-config="hostname=app.terraform.io" \
-            -backend-config="organization=ACG-Terraform-Labs-Teste" \
-            -backend-config="workspaces.name=lab-migrate-state"
+          terraform init
           if [ "${{ github.event.inputs.action }}" == "apply" ]; then
             terraform apply -auto-approve
           else
