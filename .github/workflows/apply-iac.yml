@@ -35,9 +35,11 @@ jobs:
           echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
 
       - name: Configure AWS Credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Terraform Init and Apply/Destroy
         working-directory: terraform/${{ github.event.inputs.module }}
