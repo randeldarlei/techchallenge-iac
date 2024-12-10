@@ -27,21 +27,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Configure Terraform Authentication
+        env:
+          HASHICORP_TOKEN: ${{ secrets.HASHICORP_TOKEN }}
+        run: |
+          mkdir -p ~/.terraform.d
+          echo "{\"credentials\":{\"app.terraform.io\":{\"token\":\"$HASHICORP_TOKEN\"}}}" > ~/.terraform.d/credentials.tfrc.json
+
       - name: Configure AWS Credentials
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
-          cli_config_credentials_token: ${{ secrets.HASHICORP_TOKEN }}
-
       - name: Terraform Init and Apply/Destroy
         working-directory: terraform/${{ github.event.inputs.module }}
         run: |
-          terraform init -input=false
+          terraform init \
+            -backend-config="hostname=app.terraform.io" \
+            -backend-config="organization=ACG-Terraform-Labs-Teste" \
+            -backend-config="workspace=lab-migrate-state"
           if [ "${{ github.event.inputs.action }}" == "apply" ]; then
             terraform apply -auto-approve
           else
