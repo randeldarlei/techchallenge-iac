@@ -31,18 +31,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          mkdir -p ~/.aws
-          cat > ~/.aws/credentials << EOL
-[default]
-aws_access_key_id=$AWS_ACCESS_KEY_ID
-aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
-EOL
-          cat > ~/.aws/config << EOL
-[default]
-region=us-east-1
-EOL
-
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
