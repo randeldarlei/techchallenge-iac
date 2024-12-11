@@ -11,7 +11,7 @@ terraform {
     organization = "ACG-Terraform-Labs-Teste"
 
     workspaces {
-      name = "lab-migrate-state"
+      name = "techchallenge-cluster"
     }
   }
 }
