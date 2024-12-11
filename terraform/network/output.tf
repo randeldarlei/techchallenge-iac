@@ -1,3 +1,4 @@
+# Outputs da VPC e subnets criadas
 output "vpc_id" {
   description = "ID da VPC criada"
   value       = aws_vpc.cluster_vpc.id
@@ -5,7 +6,10 @@ output "vpc_id" {
 
 output "public_subnet_ids" {
   description = "IDs das subnets públicas"
-  value       = [aws_subnet.public_cluster_subnet_1.id, aws_subnet.public_cluster_subnet_2.id]
+  value       = [
+    aws_subnet.public_cluster_subnet_1.id,
+    aws_subnet.public_cluster_subnet_2.id
+  ]
 }
 
 output "private_subnet_ids" {
