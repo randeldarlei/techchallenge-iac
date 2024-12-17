@@ -19,6 +19,7 @@ Este repositório contém uma estrutura de arquivos `hcl` para o provisionamento
 - *Configurar o backend do Terraform:* Cada pasta (´eks´ e ´network´) possui um backend remoto cujo state é salvo em um Workspace do Terraform Cloud, por isso é necessário em execuções locais executar o [Terraform Login](https://developer.hashicorp.com/terraform/tutorials/cloud-get-started/cloud-login#start-the-login-flow).
 
 ### Como as Actons Funcionam?
+- Para executar o Apply ou Destroy em sua infraestrutura basta selcionar o workspace `Terraform Apply/Destroy`em seguida clique em `run workflow`. Selecione ação *(apply ou destroy)*, por último escolha o módulo desejado.
 - As Actions utilizam um backend remoto da Hascorp para guardar o arquivo do State, para isso caso seja necessário gerenciar a infraestrutura por uma outra conta de AWS é necessário alterar dentro do Workflow criado no Terraform Cloud as vériaveis de ambiente *(AWS_ACCESS_KEY_ID e AWS_SECRET_ACCESS_KEY)* além do `HASHICORP_TOKEN` que será gerado em sua respectiva conta.
 
 - Para que tudo integrar este backend com o terraform preciso declar esta estrutura no arquivo `providers.tf`:
@@ -26,10 +27,10 @@ Este repositório contém uma estrutura de arquivos `hcl` para o provisionamento
 ```hcl
   backend "remote" {
     hostname     = "app.terraform.io"
-    organization = "ACG-Terraform-Labs-Teste"
+    organization = "sua-org"
 
     workspaces {
-      name = "techchallenge-cluster"
+      name = "seu-workspace"
     }
   }
 }
