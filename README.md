@@ -43,16 +43,6 @@ terraform apply
 
 ```
 
-Isso criará o cluster EKS, associando-o às subnets privadas definidas.
-
-Acesse e execute os seguintes comandos na pasta `rds:`
-
-```bash
-terraform init
-terraform apply
-
-```
-
 ## Licença
 Este projeto é licenciado sob os termos da MIT License.
 
