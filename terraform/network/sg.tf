@@ -8,23 +8,14 @@ resource "aws_security_group" "allow_tls" {
   }
 }
 
-# Permite conexões ao RDS a partir de qualquer IP (subnets públicas)
-resource "aws_security_group_rule" "allow_postgres_from_internet" {
-  type              = "ingress"
-  from_port         = 5432
-  to_port           = 5432
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] # Permite acesso público ao RDS
-  security_group_id = aws_security_group.allow_tls.id
-}
-
-resource "aws_security_group_rule" "allow_postgres_from_vpc" {
-  type              = "ingress"
-  from_port         = 5432
-  to_port           = 5432
-  protocol          = "tcp"
-  cidr_blocks       = ["10.0.0.0/16"] # CIDR da VPC
-  security_group_id = aws_security_group.rds_sg.id
+# Permite conexões ao RDS a partir do Security Group do EKS
+resource "aws_security_group_rule" "allow_postgres_from_eks_sg" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.allow_tls.id # SG associado ao EKS
+  security_group_id        = aws_security_group.allow_tls.id # SG associado ao RDS
 }
 
 # Permite tráfego HTTP ao backend
