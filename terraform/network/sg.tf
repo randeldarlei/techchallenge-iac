@@ -18,6 +18,15 @@ resource "aws_security_group_rule" "allow_postgres_from_internet" {
   security_group_id = aws_security_group.allow_tls.id
 }
 
+resource "aws_security_group_rule" "allow_postgres_from_vpc" {
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = ["10.0.0.0/16"] # CIDR da VPC
+  security_group_id = aws_security_group.rds_sg.id
+}
+
 # Permite tráfego HTTP ao backend
 resource "aws_security_group_rule" "allow_http" {
   type              = "ingress"
