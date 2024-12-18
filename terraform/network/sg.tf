@@ -8,6 +8,17 @@ resource "aws_security_group" "allow_tls" {
   }
 }
 
+# Permitir conexões ao RDS a partir do Security Group do EKS
+resource "aws_security_group_rule" "allow_postgres_from_eks_sg" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.allow_tls.id # Security Group do EKS
+  security_group_id        = aws_security_group.allow_tls.id # Security Group do RDS
+}
+
+
 resource "aws_security_group_rule" "allow_postgres_from_internet" {
   type              = "ingress"
   from_port         = 5432
