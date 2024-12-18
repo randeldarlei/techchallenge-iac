@@ -64,7 +64,7 @@ resource "aws_security_group_rule" "allow_http_8080" {
   to_port           = 8080
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] # Permitir de qualquer IP
-  security_group_id = aws_security_group.backend.id
+  security_group_id = aws_security_group.allow_tls.id
 }
 
 resource "aws_security_group_rule" "allow_outbound_8080" {
@@ -73,5 +73,5 @@ resource "aws_security_group_rule" "allow_outbound_8080" {
   to_port           = 8080
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] # Permitir saída para qualquer IP
-  security_group_id = aws_security_group.backend.id
+  security_group_id = aws_security_group.allow_tls.id
 }
